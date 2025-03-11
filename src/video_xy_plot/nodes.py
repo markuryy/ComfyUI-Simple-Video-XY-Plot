@@ -10,6 +10,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(
 import comfy.model_management
 import comfy.utils
 import comfy.sample
+import latent_preview
 
 class VideoXYPlotSampler:
     """
@@ -105,10 +106,14 @@ class VideoXYPlotSampler:
                                        device=frame_latent["samples"].device, 
                                        generator=torch.manual_seed(seed + frame_idx if is_video else seed))
                     
-                    # Sample using comfy.sample.sample which handles the preview
+                    # Set up callback for preview
+                    x0_output = {}
+                    callback = latent_preview.prepare_callback(model_sd3, steps, x0_output)
+                    
+                    # Sample using comfy.sample.sample with callback for preview
                     samples = comfy.sample.sample(model_sd3, noise, steps, cfg, sampler_name, scheduler,
                                                  positive, negative, frame_latent["samples"],
-                                                 denoise=denoise)
+                                                 denoise=denoise, callback=callback)
                     
                     # Decode the latent using VAE
                     image = vae.decode(samples)
