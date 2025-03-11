@@ -2,6 +2,18 @@
 
 A very basic custom node for ComfyUI that creates XY plots comparing different CFG and Shift values for Wan Video models.
 
+## Demo
+
+Below is a demonstration of the Video XY Plot Sampler node in action:
+
+![Video XY Plot Workflow](assets/VideoXYBasic.png)
+
+### Demo Video Plot
+<video src="assets/VideoXYBasic.webm" controls></video>
+
+### Demo Workflow
+You can download and import the [demo workflow JSON file](assets/VideoXYBasic.json) directly into ComfyUI by dragging and dropping it into the interface.
+
 ## Quickstart
 
 1. Install [ComfyUI](https://docs.comfy.org/get_started).
@@ -11,6 +23,7 @@ A very basic custom node for ComfyUI that creates XY plots comparing different C
 
 # Features
 
+This is a very basic node. It does not have many options.
 - **Parameter Comparison**: Create grids comparing different CFG and Shift values
 - **Customizable Ranges**: Set min, max, and step count for both CFG and Shift values
 - **Automatic Labeling**: Clear labels for each parameter combination

@@ -1,0 +1,452 @@
+{
+  "last_node_id": 10,
+  "last_link_id": 9,
+  "nodes": [
+    {
+      "id": 2,
+      "type": "UNETLoader",
+      "pos": [
+        -550,
+        -70
+      ],
+      "size": [
+        400.6515808105469,
+        82
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            1
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "UNETLoader"
+      },
+      "widgets_values": [
+        "wan2.1_t2v_1.3B_fp16.safetensors",
+        "default"
+      ]
+    },
+    {
+      "id": 5,
+      "type": "VAELoader",
+      "pos": [
+        -550,
+        210
+      ],
+      "size": [
+        400,
+        58
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "links": [
+            3
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VAELoader"
+      },
+      "widgets_values": [
+        "wan_2.1_vae.safetensors"
+      ]
+    },
+    {
+      "id": 4,
+      "type": "LoraLoaderModelOnly",
+      "pos": [
+        -130,
+        -70
+      ],
+      "size": [
+        400,
+        82
+      ],
+      "flags": {},
+      "order": 4,
+      "mode": 4,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 1
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            2
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoraLoaderModelOnly"
+      },
+      "widgets_values": [
+        "Wan21_t2v\\AndroWan_v10-0092.safetensors",
+        1
+      ]
+    },
+    {
+      "id": 8,
+      "type": "CLIPTextEncode",
+      "pos": [
+        -130,
+        320
+      ],
+      "size": [
+        400,
+        130
+      ],
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 7
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            4
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPTextEncode"
+      },
+      "widgets_values": [
+        "色调艳丽，过曝，静态，细节模糊不清，字幕，风格，作品，画作，画面，静止，整体发灰，最差质量，低质量，JPEG压缩残留，丑陋的，残缺的，多余的手指，画得不好的手部，画得不好的脸部，畸形的，毁容的，形态畸形的肢体，手指融合，静止不动的画面，杂乱的背景，三条腿，背景人很多，倒着走"
+      ]
+    },
+    {
+      "id": 7,
+      "type": "CLIPTextEncode",
+      "pos": [
+        -130,
+        60
+      ],
+      "size": [
+        400,
+        210
+      ],
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 6
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [
+            5
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPTextEncode"
+      },
+      "widgets_values": [
+        "a fox moving quickly in a beautiful winter scenery nature trees mountains daytime tracking camera"
+      ]
+    },
+    {
+      "id": 6,
+      "type": "CLIPLoader",
+      "pos": [
+        -550,
+        60
+      ],
+      "size": [
+        400,
+        98
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            6,
+            7
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPLoader"
+      },
+      "widgets_values": [
+        "umt5_xxl_fp16.safetensors",
+        "wan",
+        "default"
+      ]
+    },
+    {
+      "id": 9,
+      "type": "EmptyHunyuanLatentVideo",
+      "pos": [
+        -550,
+        320
+      ],
+      "size": [
+        400,
+        130
+      ],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [
+            8
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "EmptyHunyuanLatentVideo"
+      },
+      "widgets_values": [
+        832,
+        480,
+        33,
+        1
+      ]
+    },
+    {
+      "id": 1,
+      "type": "VideoXYPlotSampler",
+      "pos": [
+        290,
+        -70
+      ],
+      "size": [
+        315,
+        638
+      ],
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 2
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 3
+        },
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "link": 5
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "link": 4
+        },
+        {
+          "name": "latent_image",
+          "type": "LATENT",
+          "link": 8
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [
+            9
+          ],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VideoXYPlotSampler"
+      },
+      "widgets_values": [
+        4,
+        8,
+        3,
+        6,
+        8,
+        2,
+        20,
+        "euler",
+        "normal",
+        500194841253280,
+        "randomize",
+        1,
+        "enable"
+      ]
+    },
+    {
+      "id": 10,
+      "type": "SaveWEBM",
+      "pos": [
+        620,
+        -70
+      ],
+      "size": [
+        560,
+        640
+      ],
+      "flags": {},
+      "order": 8,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 9
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "Node name for S&R": "SaveWEBM"
+      },
+      "widgets_values": [
+        "ComfyUI",
+        "vp9",
+        16,
+        32,
+        ""
+      ]
+    }
+  ],
+  "links": [
+    [
+      1,
+      2,
+      0,
+      4,
+      0,
+      "MODEL"
+    ],
+    [
+      2,
+      4,
+      0,
+      1,
+      0,
+      "MODEL"
+    ],
+    [
+      3,
+      5,
+      0,
+      1,
+      1,
+      "VAE"
+    ],
+    [
+      4,
+      8,
+      0,
+      1,
+      3,
+      "CONDITIONING"
+    ],
+    [
+      5,
+      7,
+      0,
+      1,
+      2,
+      "CONDITIONING"
+    ],
+    [
+      6,
+      6,
+      0,
+      7,
+      0,
+      "CLIP"
+    ],
+    [
+      7,
+      6,
+      0,
+      8,
+      0,
+      "CLIP"
+    ],
+    [
+      8,
+      9,
+      0,
+      1,
+      4,
+      "LATENT"
+    ],
+    [
+      9,
+      1,
+      0,
+      10,
+      0,
+      "IMAGE"
+    ]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 1,
+      "offset": [
+        670.4710937416074,
+        426.0206855278954
+      ]
+    },
+    "node_versions": {
+      "comfy-core": "0.3.26",
+      "video_xy_plot": "56837f9c22b5d234ce71d276098ab59d52df6615"
+    },
+    "ue_links": [],
+    "VHS_latentpreview": false,
+    "VHS_latentpreviewrate": 0
+  },
+  "version": 0.4
+}
