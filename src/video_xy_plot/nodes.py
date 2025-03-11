@@ -193,113 +193,133 @@ class VideoXYPlot:
         has_multiple_frames = final_grid.shape[0] > 1
         print(f"Final grid has multiple frames: {has_multiple_frames}, shape: {final_grid.shape}")
         
-        # Add labels if enabled
-        if add_labels == "enable":
-            # We'll add labels to the first frame only
-            first_frame = final_grid[0:1] if has_multiple_frames else final_grid
-            print(f"First frame shape for labeling: {first_frame.shape}")
+        # Define padding dimensions for labels if enabled
+        left_padding = 90 if add_labels == "enable" else 0  # Increased from 60 to 90 for two-line shift labels
+        top_padding = 40 if add_labels == "enable" else 0
+        
+        # Process each frame to add padding and labels if enabled
+        if add_labels == "enable" or has_multiple_frames:
+            # We'll process all frames
+            processed_frames = []
+            num_frames_to_process = final_grid.shape[0]
+            print(f"Processing {num_frames_to_process} frames for labeling/padding")
             
-            # Convert to numpy for PIL
-            grid_np = first_frame.cpu().numpy()
-            print(f"Numpy array shape for PIL conversion: {grid_np.shape}")
-            
-            # Handle different tensor shapes
-            if len(grid_np.shape) == 5:  # [batch, frames, channel, height, width]
-                print("Detected 5D tensor, reshaping for PIL conversion")
-                # Reshape to 4D by combining batch and frames
-                grid_np = grid_np.reshape(-1, grid_np.shape[-3], grid_np.shape[-2], grid_np.shape[-1])
-                print(f"Reshaped to: {grid_np.shape}")
-            
-            # Normalize to 0-255 range and convert to uint8
-            grid_np = (grid_np * 255).astype(np.uint8)
-            
-            # Create PIL image based on tensor shape
-            try:
-                # Based on the error log, we need to handle the specific shape (5, 1664, 960, 3)
-                # This is [frames, height, width, channel] format
-                if len(grid_np.shape) == 4 and grid_np.shape[-1] == 3:  # [frames/batch, height, width, channel]
-                    # This is already in the right format for PIL
-                    pil_image = Image.fromarray(grid_np[0])
-                    print(f"Created PIL image with size: {pil_image.size}")
-                elif len(grid_np.shape) == 4:  # [batch, channel, height, width]
-                    # Standard format: [batch, channel, height, width] -> [height, width, channel]
-                    pil_image = Image.fromarray(grid_np[0].transpose(1, 2, 0))
-                    print(f"Created PIL image with size: {pil_image.size}")
-                elif len(grid_np.shape) == 3 and grid_np.shape[-1] == 3:  # [height, width, channel]
-                    # Already in the right format
-                    pil_image = Image.fromarray(grid_np)
-                    print(f"Created PIL image with size: {pil_image.size}")
-                elif len(grid_np.shape) == 3:  # [channel, height, width]
-                    # No batch dimension: [channel, height, width] -> [height, width, channel]
-                    pil_image = Image.fromarray(grid_np.transpose(1, 2, 0))
-                    print(f"Created PIL image with size: {pil_image.size}")
-                else:
-                    raise ValueError(f"Unexpected tensor shape: {grid_np.shape}")
-            except Exception as e:
-                print(f"Error creating PIL image: {e}")
-                print(f"Tensor shape: {grid_np.shape}")
-                print(f"Data type: {grid_np.dtype}")
-                print(f"Min/max values: {grid_np.min()}, {grid_np.max()}")
+            for frame_idx in range(num_frames_to_process):
+                # Get the current frame
+                current_frame = final_grid[frame_idx:frame_idx+1]
+                print(f"Processing frame {frame_idx}, shape: {current_frame.shape}")
                 
-                # Create a blank image with dimensions from the tensor if possible
-                if len(grid_np.shape) >= 3:
-                    if len(grid_np.shape) == 4:
-                        if grid_np.shape[-1] == 3:  # [frames/batch, height, width, channel]
-                            h, w = grid_np.shape[1], grid_np.shape[2]
-                        else:  # [batch, channel, height, width]
-                            h, w = grid_np.shape[2], grid_np.shape[3]
-                    else:  # [channel, height, width] or [height, width, channel]
-                        if grid_np.shape[-1] == 3:  # [height, width, channel]
-                            h, w = grid_np.shape[0], grid_np.shape[1]
-                        else:  # [channel, height, width]
-                            h, w = grid_np.shape[1], grid_np.shape[2]
-                    pil_image = Image.new('RGB', (w, h), color=(0, 0, 0))
-                    print(f"Created blank image with size: {pil_image.size}")
+                # Convert to numpy for PIL
+                frame_np = current_frame.cpu().numpy()
+                
+                # Handle different tensor shapes
+                if len(frame_np.shape) == 5:  # [batch, frames, channel, height, width]
+                    print("Detected 5D tensor, reshaping for PIL conversion")
+                    # Reshape to 4D by combining batch and frames
+                    frame_np = frame_np.reshape(-1, frame_np.shape[-3], frame_np.shape[-2], frame_np.shape[-1])
+                
+                # Normalize to 0-255 range and convert to uint8
+                frame_np = (frame_np * 255).astype(np.uint8)
+                
+                # Create PIL image based on tensor shape
+                try:
+                    if len(frame_np.shape) == 4 and frame_np.shape[-1] == 3:  # [frames/batch, height, width, channel]
+                        # This is already in the right format for PIL
+                        pil_image = Image.fromarray(frame_np[0])
+                    elif len(frame_np.shape) == 4:  # [batch, channel, height, width]
+                        # Standard format: [batch, channel, height, width] -> [height, width, channel]
+                        pil_image = Image.fromarray(frame_np[0].transpose(1, 2, 0))
+                    elif len(frame_np.shape) == 3 and frame_np.shape[-1] == 3:  # [height, width, channel]
+                        # Already in the right format
+                        pil_image = Image.fromarray(frame_np)
+                    elif len(frame_np.shape) == 3:  # [channel, height, width]
+                        # No batch dimension: [channel, height, width] -> [height, width, channel]
+                        pil_image = Image.fromarray(frame_np.transpose(1, 2, 0))
+                    else:
+                        raise ValueError(f"Unexpected tensor shape: {frame_np.shape}")
+                    
+                    print(f"Created PIL image with size: {pil_image.size}")
+                except Exception as e:
+                    print(f"Error creating PIL image: {e}")
+                    print(f"Tensor shape: {frame_np.shape}")
+                    print(f"Data type: {frame_np.dtype}")
+                    print(f"Min/max values: {frame_np.min()}, {frame_np.max()}")
+                    
+                    # Create a blank image with dimensions from the tensor if possible
+                    if len(frame_np.shape) >= 3:
+                        if len(frame_np.shape) == 4:
+                            if frame_np.shape[-1] == 3:  # [frames/batch, height, width, channel]
+                                h, w = frame_np.shape[1], frame_np.shape[2]
+                            else:  # [batch, channel, height, width]
+                                h, w = frame_np.shape[2], frame_np.shape[3]
+                        else:  # [channel, height, width] or [height, width, channel]
+                            if frame_np.shape[-1] == 3:  # [height, width, channel]
+                                h, w = frame_np.shape[0], frame_np.shape[1]
+                            else:  # [channel, height, width]
+                                h, w = frame_np.shape[1], frame_np.shape[2]
+                        pil_image = Image.new('RGB', (w, h), color=(0, 0, 0))
+                        print(f"Created blank image with size: {pil_image.size}")
+                    else:
+                        # Fallback to a default size
+                        pil_image = Image.new('RGB', (512, 512), color=(0, 0, 0))
+                        print("Created default 512x512 blank image")
+                
+                # Get original image dimensions
+                orig_width, orig_height = pil_image.size
+                
+                if add_labels == "enable":
+                    # Create a new image with padding
+                    padded_image = Image.new('RGB', (orig_width + left_padding, orig_height + top_padding), color=(0, 0, 0))
+                    
+                    # Paste the original image into the padded image with offset
+                    padded_image.paste(pil_image, (left_padding, top_padding))
+                    
+                    # Create drawing context
+                    draw = ImageDraw.Draw(padded_image)
+                    
+                    # Try to load a font, use default if not available
+                    try:
+                        font = ImageFont.truetype("arial.ttf", 20)
+                    except IOError:
+                        font = ImageFont.load_default()
+                    
+                    # Calculate cell dimensions based on original image
+                    cell_width = orig_width // cfg_steps
+                    cell_height = orig_height // shift_steps
+                    
+                    # Add CFG labels (top)
+                    for i, cfg in enumerate(cfg_values):
+                        x = left_padding + i * cell_width + cell_width // 2
+                        draw.text((x, top_padding // 2), f"CFG: {cfg:.2f}", fill=(255, 255, 255), font=font, anchor="mm")
+                    
+                    # Add Shift labels (left) - split onto two lines
+                    for i, shift in enumerate(shift_values):
+                        y = top_padding + i * cell_height + cell_height // 2
+                        # Draw "Shift:" on the first line
+                        draw.text((left_padding // 2, y - 10), "Shift:", fill=(255, 255, 255), font=font, anchor="mm")
+                        # Draw the value on the second line
+                        draw.text((left_padding // 2, y + 10), f"{shift:.2f}", fill=(255, 255, 255), font=font, anchor="mm")
+                    
+                    # Use the padded image
+                    final_pil_image = padded_image
                 else:
-                    # Fallback to a default size
-                    pil_image = Image.new('RGB', (512, 512), color=(0, 0, 0))
-                    print("Created default 512x512 blank image")
+                    # Use the original image without padding
+                    final_pil_image = pil_image
+                
+                # Convert back to tensor
+                pil_array = np.array(final_pil_image)
+                print(f"PIL array shape after processing: {pil_array.shape}")
+                # Keep as [height, width, channel] format which is what ComfyUI expects
+                pil_array = pil_array.astype(np.float32) / 255.0
+                processed_frame = torch.from_numpy(pil_array).unsqueeze(0)
+                print(f"Processed frame tensor shape: {processed_frame.shape}")
+                
+                # Add to our collection of processed frames
+                processed_frames.append(processed_frame)
             
-            # Create drawing context
-            draw = ImageDraw.Draw(pil_image)
-            
-            # Try to load a font, use default if not available
-            try:
-                font = ImageFont.truetype("arial.ttf", 20)
-            except IOError:
-                font = ImageFont.load_default()
-            
-            # Get image dimensions
-            width, height = pil_image.size
-            cell_width = width // cfg_steps
-            cell_height = height // shift_steps
-            
-            # Add CFG labels (top)
-            for i, cfg in enumerate(cfg_values):
-                x = i * cell_width + cell_width // 2
-                draw.text((x, 10), f"CFG: {cfg:.2f}", fill=(255, 255, 255), font=font, anchor="mt")
-            
-            # Add Shift labels (left)
-            for i, shift in enumerate(shift_values):
-                y = i * cell_height + cell_height // 2
-                draw.text((10, y), f"Shift: {shift:.2f}", fill=(255, 255, 255), font=font, anchor="lm")
-            
-            # Convert back to tensor
-            pil_array = np.array(pil_image)
-            print(f"PIL array shape after drawing: {pil_array.shape}")
-            # Keep as [height, width, channel] format which is what ComfyUI expects
-            pil_array = pil_array.astype(np.float32) / 255.0
-            labeled_frame = torch.from_numpy(pil_array).unsqueeze(0)
-            print(f"Labeled frame tensor shape: {labeled_frame.shape}")
-            
-            # Replace the first frame with the labeled one
-            if has_multiple_frames:
-                print(f"Replacing first frame in video. Final grid shape before: {final_grid.shape}")
-                final_grid = torch.cat([labeled_frame, final_grid[1:]], dim=0)
-                print(f"Final grid shape after label replacement: {final_grid.shape}")
-            else:
-                final_grid = labeled_frame
-                print(f"Final image shape after labeling: {final_grid.shape}")
+            # Stack all processed frames back into a video
+            final_grid = torch.cat(processed_frames, dim=0)
+            print(f"Final grid shape after processing all frames: {final_grid.shape}")
         
         return (final_grid,)
 
