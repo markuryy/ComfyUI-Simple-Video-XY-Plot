@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "video_xy_plot"
-version = "0.0.1"
+version = "0.1.0"
 description = "A collection of custom nodes for ComfyUI"
 authors = [
   {name = "Markury", email = "comfy@markury.dev"}
