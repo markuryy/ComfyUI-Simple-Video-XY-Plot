@@ -1,22 +1,17 @@
 # Video XY Plot for ComfyUI
 
-A custom node for ComfyUI that creates XY plots comparing different CFG and Shift values for SD3 models.
-
-> [!NOTE]
-> This project was created with a [cookiecutter](https://github.com/Comfy-Org/cookiecutter-comfy-extension) template and customized to create a specialized node for parameter comparison.
+A very basic custom node for ComfyUI that creates XY plots comparing different CFG and Shift values for Wan Video models.
 
 ## Quickstart
 
 1. Install [ComfyUI](https://docs.comfy.org/get_started).
 2. Install [ComfyUI-Manager](https://github.com/ltdrdata/ComfyUI-Manager)
-3. Look up this extension in ComfyUI-Manager. If you are installing manually, clone this repository under `ComfyUI/custom_nodes`.
+3. ~~Look up this extension in ComfyUI-Manager.~~ If you are installing manually, clone this repository under `ComfyUI/custom_nodes`.
 4. Restart ComfyUI.
 
 # Features
 
 - **Parameter Comparison**: Create grids comparing different CFG and Shift values
-- **Visual Optimization**: Easily find the best parameters for your SD3 models
-- **Video Support**: Process video frames with consistent parameter grids
 - **Customizable Ranges**: Set min, max, and step count for both CFG and Shift values
 - **Automatic Labeling**: Clear labels for each parameter combination
 
@@ -24,12 +19,12 @@ A custom node for ComfyUI that creates XY plots comparing different CFG and Shif
 
 1. Connect a model to the "model" input
 2. Connect a VAE to the "vae" input
-3. Connect positive and negative prompts to the respective inputs
-4. Connect a latent image (can be a video latent with multiple frames)
+3. Connect positive and negative conditioning to the respective inputs
+4. Connect an empty video latent image (can be a video latent with multiple frames)
 5. Adjust the CFG and Shift ranges as needed
 6. Run the node to generate the XY plot
 
-For more detailed information, see the [developer documentation](./cline_docs/dev_docs.md).
+This node essentially combines the SodelSamplingSD3, Ksampler, and VAE Decode nodes. It does not do much more than that. The output is a decoded grid of videos. Individual videos are not output.
 
 ## Develop
 
@@ -42,23 +37,6 @@ pre-commit install
 ```
 
 The `-e` flag above will result in a "live" install, in the sense that any changes you make to your node extension will automatically be picked up the next time you run ComfyUI.
-
-## Publish to Github
-
-Install Github Desktop or follow these [instructions](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent) for ssh.
-
-1. Create a Github repository that matches the directory name. 
-2. Push the files to Git
-```
-git add .
-git commit -m "project scaffolding"
-git push
-``` 
-
-## Writing custom nodes
-
-An example custom node is located in [node.py](src/video_xy_plot/nodes.py). To learn more, read the [docs](https://docs.comfy.org/essentials/custom_node_overview).
-
 
 ## Tests
 
