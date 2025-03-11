@@ -9,7 +9,7 @@ Below is a demonstration of the Video XY Plot Sampler node in action:
 ![Video XY Plot Workflow](assets/VideoXYBasic.png)
 
 ### Demo Video Plot
-<video src="assets/VideoXYBasicDemo.mp4" controls></video>
+[VideoXYBasicDemo.webm](https://github.com/user-attachments/assets/2068c71f-12e2-4aa5-ae99-8b4f221d63f2)
 
 ### Demo Workflow
 You can download and import the [demo workflow JSON file](assets/VideoXYBasicWorkflow.json) directly into ComfyUI by dragging and dropping it into the interface.
