@@ -29,7 +29,7 @@ dev = [
 [project.urls]
 bugs = "https://github.com/markuryy/ComfyUI-Simple-Video-XY-Plot/issues"
 homepage = "https://github.com/markuryy/ComfyUI-Simple-Video-XY-Plot"
-
+Repository = "https://github.com/markuryy/ComfyUI-Simple-Video-XY-Plot"
 
 [tool.comfy]
 PublisherId = "markuryy"
