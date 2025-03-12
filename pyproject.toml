@@ -27,8 +27,8 @@ dev = [
 ]
 
 [project.urls]
-bugs = "https://github.com/markuryy/video_xy_plot/issues"
-homepage = "https://github.com/markuryy/video_xy_plot"
+bugs = "https://github.com/markuryy/ComfyUI-Simple-Video-XY-Plot/issues"
+homepage = "https://github.com/markuryy/ComfyUI-Simple-Video-XY-Plot"
 
 
 [tool.comfy]
