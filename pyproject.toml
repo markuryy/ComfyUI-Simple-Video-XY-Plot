@@ -6,6 +6,7 @@ build-backend = "setuptools.build_meta"
 name = "ComfyUI-Simple-Video-XY-Plot"
 version = "0.1.1"
 description = "A collection of custom nodes for ComfyUI"
+repository = "https://github.com/markuryy/ComfyUI-Simple-Video-XY-Plot"
 authors = [
   {name = "Markury", email = "comfy@markury.dev"}
 ]
