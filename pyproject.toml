@@ -3,7 +3,7 @@ requires = ["setuptools>=70.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "video_xy_plot"
+name = "ComfyUI-Simple-Video-XY-Plot"
 version = "0.1.0"
 description = "A collection of custom nodes for ComfyUI"
 authors = [
